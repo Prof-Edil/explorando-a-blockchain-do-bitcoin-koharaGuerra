@@ -19,4 +19,4 @@ public_keys=$(echo "$public_keys" | jq -R -s -c 'split("\n") | map(select(. != "
 multisigaddress=$(bitcoin-cli createmultisig 1 $public_keys)
 
 # Imprime somente o endereço
-echo $multisigaddress | jq .address
+echo $multisigaddress | jq -r .address
