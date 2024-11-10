@@ -2,15 +2,11 @@
 #   `37d966a263350fe747f1c606b159987545844a493dd38d84b070027a895c4517`
 #!/bin/bash
 
-# Obtendo a raw transaction
-raw_tx=$(bitcoin-cli getrawtransaction 37d966a263350fe747f1c606b159987545844a493dd38d84b070027a895c4517)
-
-# Decodificando a transação
-dec_tx=$(bitcoin-cli decoderawtransaction "$raw_tx")
+# Obtendo informações sobre a transação
+raw_tx=$(bitcoin-cli getrawtransaction 37d966a263350fe747f1c606b159987545844a493dd38d84b070027a895c4517 1)
 
 #Extraindo e listando as chaves públicas das entradas da transação
-
-public_keys=$(echo "$dec_tx" | jq -r '.vin[] | if .txinwitness != null then .txinwitness[1] elif .scriptSig.asm != "" then .scriptSig.asm else null end')
+public_keys=$(echo "$raw_tx" | jq -r '.vin[] | if .txinwitness != null then .txinwitness[1] elif .scriptSig.asm != "" then .scriptSig.asm else null end')
 
 # Formatando como um array JSON adequado para createmultisig
 public_keys=$(echo "$public_keys" | jq -R -s -c 'split("\n") | map(select(. != ""))')
