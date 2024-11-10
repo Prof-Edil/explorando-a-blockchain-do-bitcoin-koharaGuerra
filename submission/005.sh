@@ -17,5 +17,6 @@ public_keys=$(echo "$public_keys" | jq -R -s -c 'split("\n") | map(select(. != "
 
 # Cria um endereço multisig 1-of-4 P2SH
 multisigaddress=$(bitcoin-cli createmultisig 1 $public_keys)
+
 # Imprime somente o endereço
 echo $multisigaddress | jq .address
