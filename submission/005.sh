@@ -12,8 +12,10 @@ dec_tx=$(bitcoin-cli decoderawtransaction "$raw_tx")
 
 public_keys=$(echo "$dec_tx" | jq -r '.vin[] | if .txinwitness != null then .txinwitness[1] elif .scriptSig.asm != "" then .scriptSig.asm else null end')
 
-# Formata como um array JSON adequado para createmultisig
+# Formatando como um array JSON adequado para createmultisig
 public_keys=$(echo "$public_keys" | jq -R -s -c 'split("\n") | map(select(. != ""))')
 
 # Cria um endereço multisig 1-of-4 P2SH
-bitcoin-cli createmultisig 1 $public_keys
+multisigaddress=$(bitcoin-cli createmultisig 1 $public_keys)
+# Imprime somente o endereço
+echo $multisigaddress | jq .address
